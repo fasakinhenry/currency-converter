@@ -7,18 +7,17 @@ const RESTCOUNTRIES_API_KEY = process.env.RESTCOUNTRIES_API_KEY;
 
 // GET - get exchange rates
 const getExchangeRate = async (fromCurrency, toCurrency) => {
-  const response = await axios.get(`${CURRENCYLAYER_API_URL}`);
-  const exchangeRate = response.data.quotes;
+  const response = await axios.get(
+    `${CURRENCYLAYER_API_URL}&from=${fromCurrency}&to=${toCurrency}&amount=1`
+  );
+  const exchangeRate = response.data.result;
 
-  if (
-    !exchangeRate[`${fromCurrency}${toCurrency}`] ||
-    isNaN(exchangeRate[`${fromCurrency}${toCurrency}`])
-  ) {
+  if (!exchangeRate || isNaN(exchangeRate)) {
     throw new Error(
       `Unable to get exchange rate from ${fromCurrency} to ${toCurrency}`
     );
   }
-  return exchangeRate[`${fromCurrency}${toCurrency}`];
+  return exchangeRate;
 };
 
 // GET - get countries using a specific currency
@@ -43,7 +42,7 @@ const convertCurrency = async (fromCurrency, toCurrency, amount) => {
 };
 
 // call convertCurrency function
-convertCurrency('USD', 'NGN', 100)
+convertCurrency('PGK', 'NGN', 100)
   .then((message) => {
     console.log(message);
   })
