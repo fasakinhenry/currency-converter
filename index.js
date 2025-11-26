@@ -5,7 +5,7 @@ const CURRENCYLAYER_API_URL = process.env.CURRENCYLAYER_API_URL;
 const RESTCOUNTRIES_BASE_URL = process.env.RESTCOUNTRIES_BASE_URL;
 const RESTCOUNTRIES_API_KEY = process.env.RESTCOUNTRIES_API_KEY;
 
-// GET - get exchange rates
+// Convert 1 unit of one currency to another to get exchange rates
 const getExchangeRate = async (fromCurrency, toCurrency) => {
   const response = await axios.get(
     `${CURRENCYLAYER_API_URL}&from=${fromCurrency}&to=${toCurrency}&amount=1`
@@ -20,7 +20,7 @@ const getExchangeRate = async (fromCurrency, toCurrency) => {
   return exchangeRate;
 };
 
-// GET - get countries using a specific currency
+// Get countries using a specific currency
 const getCountries = async (toCurrency) => {
   try {
     const response = await axios.get(
@@ -31,7 +31,9 @@ const getCountries = async (toCurrency) => {
     throw new Error(`Unable to get countries that use ${toCurrency}`);
   }
 };
-// POST - convert currency
+
+// Convert currency and output a message
+// Multiply exchange rate by amount to get converted currency
 const convertCurrency = async (fromCurrency, toCurrency, amount) => {
   const countries = await getCountries(toCurrency);
   const exchangeRate = await getExchangeRate(fromCurrency, toCurrency);
